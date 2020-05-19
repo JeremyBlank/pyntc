@@ -55,6 +55,16 @@ class BaseDevice(object):
         """
         raise NotImplementedError
 
+    @property
+    @abc.abstractmethod
+        """Get current boot variables
+        like system image and kickstart image.
+
+        Returns:
+            A dictionary, e.g. {'kick': router_kick.img, 'sys': 'router_sys.img'}
+        """
+        raise NotImplementedError
+
     @abc.abstractmethod
     def checkpoint(self, filename):
         """Save a checkpoint of the running configuration to the device.
@@ -182,16 +192,6 @@ class BaseDevice(object):
         """
 
     @abc.abstractmethod
-    def get_boot_options(self):
-        """Get current boot variables
-        like system image and kickstart image.
-
-        Returns:
-            A dictionary, e.g. {'kick': router_kick.img, 'sys': 'router_sys.img'}
-        """
-        raise NotImplementedError
-
-    @abc.abstractmethod
     def install_os(self, image_name, **vendor_specifics):
         """Install the OS from specified image_name
 
@@ -282,7 +282,7 @@ class BaseDevice(object):
                 by the ``_get_file_system()`` method.
 
         Raises:
-            ValueError: When the boot options returned by the ``get_boot_options``
+            ValueError: When the boot options returned by the ``boot_options``
                 method does not match the ``image_name`` after the config command(s)
                 have been sent to the device.
         """
@@ -341,6 +341,16 @@ class BaseDevice(object):
             raise FeatureNotFoundError(feature_name, self.device_type)
         except AttributeError:
             raise
+
+    def get_boot_options(self):
+        """Get current boot variables
+        like system image and kickstart image.
+
+        Returns:
+            A dictionary, e.g. {'kick': router_kick.img, 'sys': 'router_sys.img'}
+        """
+        print("This method will be deprecated; migrate to use the ``boot_options`` property")
+        return self.boot_options
 
     def refresh(self):
         """Refresh caches on device instance.

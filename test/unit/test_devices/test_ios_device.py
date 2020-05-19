@@ -157,13 +157,13 @@ class TestIOSDevice(unittest.TestCase):
         self.device.reboot()
         assert not self.device.native.send_command.called
 
-    def test_get_boot_options(self):
-        boot_options = self.device.get_boot_options()
+    def test_boot_options(self):
+        boot_options = self.device.boot_options
         self.assertEqual(boot_options, {"sys": "other_image"})
 
     @mock.patch.object(IOSDevice, "_is_catalyst", return_value=True)
-    def test_get_boot_options_catalyst(self, mock_is_cat):
-        boot_options = self.device.get_boot_options()
+    def test_boot_options_catalyst(self, mock_is_cat):
+        boot_options = self.device.boot_options
         self.assertEqual(boot_options, {"sys": "c3560-advipservicesk9-mz.122-44.SE"})
 
     def test_set_boot_options(self):
